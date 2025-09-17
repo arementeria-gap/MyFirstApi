@@ -1,0 +1,48 @@
+# .NET build artifacts
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code settings
+.vscode/
+
+# MacOS system files
+.DS_Store
+
+# ASP.NET secrets
+secrets.json
+
+# NuGet packages
+*.nupkg
+packages/
+.nuget/
+
+# Logs
+*.log
+
+# Build results
+*.dll
+*.exe
+*.pdb
+
+# Publish directory
+publish/
+wwwroot/
+
+# Rider project files
+.idea/
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Others
+*.vspscc
+_ReSharper*/
