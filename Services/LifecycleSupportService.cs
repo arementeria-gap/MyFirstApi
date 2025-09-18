@@ -1,13 +1,9 @@
 namespace MyFirstApi.Services;
 
-public class LifecyclesSupportService
+public class LifecyclesSupportService(LifecyclesService service)
 {
-    private readonly LifecyclesService _service;
+    private readonly LifecyclesService _service = service;
 
-    public LifecyclesSupportService(LifecyclesService service)
-    {
-        _service = service;
-    }
     public int Get()
     {
         return _service.GetRandomNumber();

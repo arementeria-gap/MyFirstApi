@@ -3,12 +3,7 @@ using MyFirstApi.Models;
 
 namespace MyFirstApi.Data;
 
-public class ApiContext : DbContext
+public class ApiContext(DbContextOptions<ApiContext> options) : DbContext(options)
 {
-    public ApiContext(DbContextOptions<ApiContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Product> Products { get; set; }
 }

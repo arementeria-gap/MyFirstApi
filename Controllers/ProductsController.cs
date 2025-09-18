@@ -19,6 +19,6 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
-        return await _service.GetAll();
+        return Ok(await _service.GetAllAsync());
     }
 }

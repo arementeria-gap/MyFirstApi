@@ -1,6 +1,8 @@
 using MyFirstApi.Services;
 using MyFirstApi.Data;
 using Microsoft.EntityFrameworkCore;
+using MyFirstApi.Repository;
+using MyFirstApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<ApiContext>(options => 
     options.UseInMemoryDatabase("ProductDb"));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<LifecyclesService>();
 builder.Services.AddTransient<LifecyclesSupportService>();
