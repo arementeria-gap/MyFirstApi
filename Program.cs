@@ -13,9 +13,18 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApiContext>(options => 
     options.UseInMemoryDatabase("ProductDb"));
 builder.Services.AddScoped<ProductService>();
-// builder.Services.AddSingleton<ProductService>();
+builder.Services.AddScoped<LifecyclesService>();
+builder.Services.AddTransient<LifecyclesSupportService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApiContext>();
+
+    DbInitializer.Initialize(context);
+}
 
 // --- Add this block of code ---
 // Get the ProductService so we can subscribe to its event

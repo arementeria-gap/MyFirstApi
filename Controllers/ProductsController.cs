@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // Add this
-using MyFirstApi.Data;             // Add this
 using MyFirstApi.Models;
 using MyFirstApi.Services;           // Add this
 
