@@ -3,6 +3,8 @@ using MyFirstApi.Data;
 using Microsoft.EntityFrameworkCore;
 using MyFirstApi.Repository;
 using MyFirstApi.Models;
+using MyFirstApi.Factories;
+using MyFirstApi.Strategies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,10 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<LifecyclesService>();
 builder.Services.AddTransient<LifecyclesSupportService>();
 
+builder.Services.AddTransient<IShippingCostStrategy, FedExShippingStrategy>();
+builder.Services.AddTransient<IShippingCostStrategy, UPSShippingStrategy>();
+builder.Services.AddSingleton<IShippingCostStrategyFactory, ShippingCostStrategyFactory>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -28,28 +34,6 @@ using (var scope = app.Services.CreateScope())
 
     DbInitializer.Initialize(context);
 }
-
-// --- Add this block of code ---
-// Get the ProductService so we can subscribe to its event
-#region Event Subscription
-/**
-var productService = app.Services.GetRequiredService<ProductService>();
-
-// Use the += operator to subscribe a method to the event
-productService.ProductsRetrieved += async (source, args) =>
-{
-    await Task.Delay(1);
-    Console.WriteLine("EVENT SUBSCRIBER: The product list was requested!");
-};
-
-productService.ProductsRetrieved += async (source, args) =>
-{
-    await Task.Delay(10000);
-    Console.WriteLine("Could it be that this is also triggered?");
-};
-**/
-#endregion
-// --- End of block ---
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
