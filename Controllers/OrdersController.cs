@@ -2,15 +2,32 @@ using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Models;
 using MyFirstApi.Services;
 using MyFirstApi.Factories;
+using MyFirstApi.Builders;
+using MyFirstApi.Repository;
 
 namespace MyFirstApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class OrdersController(IShippingCostStrategyFactory strategyFactory, ShippingProviderAbstractFactory abstractFactory) : ControllerBase
+public class OrdersController : ControllerBase
 {
-    private readonly ShippingProviderAbstractFactory _abstractFactory = abstractFactory;
-    private readonly IShippingCostStrategyFactory _strategyFactory = strategyFactory;
+    private readonly ShippingProviderAbstractFactory _abstractFactory;
+    private readonly IShippingCostStrategyFactory _strategyFactory;
+    private readonly IManifestBuilder _manifestBuilder;
+    private readonly IProductRepository _productRepository;
+
+    // Inject the new services
+    public OrdersController(
+        IShippingCostStrategyFactory strategyFactory,
+        ShippingProviderAbstractFactory abstractFactory,
+        IManifestBuilder manifestBuilder,
+        IProductRepository productRepository)
+    {
+        _strategyFactory = strategyFactory;
+        _abstractFactory = abstractFactory;
+        _manifestBuilder = manifestBuilder;
+        _productRepository = productRepository;
+    }
 
     [HttpPost("calculate-shipping")]
     public ActionResult<decimal> CalculateShipping([FromBody] Order order, [FromQuery] string provider)
@@ -48,5 +65,30 @@ public class OrdersController(IShippingCostStrategyFactory strategyFactory, Ship
         {
             return BadRequest(ex.Message);
         }
+    }
+    
+    // --- Add this new endpoint ---
+    [HttpPost("generate-manifest")]
+    public async Task<ActionResult<string>> GenerateManifest([FromBody] Order order, [FromQuery] bool addInsurance = false)
+    {
+        // In a real app, you'd get the products associated with the order
+        var allProducts = await _productRepository.GetAllAsync();
+
+        // Use the builder to construct the manifest step-by-step
+        _manifestBuilder
+            .BuildHeader(order)
+            .BuildProductList(allProducts)
+            .BuildCustomsInfo(order);
+
+        // Conditionally add an optional part
+        if (addInsurance)
+        {
+            _manifestBuilder.BuildInsuranceInfo(order);
+        }
+
+        ShippingManifest manifest = _manifestBuilder.GetManifest();
+
+        // We return the formatted string from the manifest's ToString() method
+        return Ok(manifest.ToString());
     }
 }
