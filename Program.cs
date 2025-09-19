@@ -7,6 +7,8 @@ using MyFirstApi.Factories;
 using MyFirstApi.Strategies;
 using MyFirstApi.Builders;
 using MyFirstApi.Prototypes;
+using MyFirstApi.Decorators;
+using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,18 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<ApiContext>(options => 
     options.UseInMemoryDatabase("ProductDb"));
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<ProductRepository>();
+
+builder.Services.AddScoped<IProductRepository, CachingProductRepository>(sp =>
+    new CachingProductRepository(
+        sp.GetRequiredService<ProductRepository>(),
+        sp.GetRequiredService<IMemoryCache>()
+    ));
+
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<LifecyclesService>();
 builder.Services.AddTransient<LifecyclesSupportService>();
