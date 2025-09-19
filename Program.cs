@@ -6,6 +6,7 @@ using MyFirstApi.Models;
 using MyFirstApi.Factories;
 using MyFirstApi.Strategies;
 using MyFirstApi.Builders;
+using MyFirstApi.Prototypes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.AddTransient<IShippingProviderFactory, FedExGroundFactory>();
 builder.Services.AddTransient<IShippingProviderFactory, FedExExpressFactory>();
 
 builder.Services.AddTransient<IManifestBuilder, ShippingManifestBuilder>();
+
+builder.Services.AddSingleton<ProfilePrototypeRegistry>();
 
 var app = builder.Build();
 
