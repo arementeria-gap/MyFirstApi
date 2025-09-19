@@ -25,6 +25,11 @@ builder.Services.AddTransient<IShippingCostStrategy, FedExShippingStrategy>();
 builder.Services.AddTransient<IShippingCostStrategy, UPSShippingStrategy>();
 builder.Services.AddSingleton<IShippingCostStrategyFactory, ShippingCostStrategyFactory>();
 
+builder.Services.AddSingleton<ShippingProviderAbstractFactory>();
+
+builder.Services.AddTransient<IShippingProviderFactory, FedExGroundFactory>();
+builder.Services.AddTransient<IShippingProviderFactory, FedExExpressFactory>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
