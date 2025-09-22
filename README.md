@@ -39,6 +39,8 @@ A modern ASP.NET Core Web API demonstrating best practices in service lifecycles
    ```
 4. Open [http://localhost:5000/swagger](http://localhost:5000/swagger) for API documentation.
 
+5. To run tests `dotnet test --collect:"XPlat Code Coverage"`
+
 ## Project Structure
 ```
 Controllers/         # API controllers
