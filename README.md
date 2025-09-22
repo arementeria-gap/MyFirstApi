@@ -35,7 +35,7 @@ A modern ASP.NET Core Web API demonstrating best practices in service lifecycles
    ```
 3. Run the application:
    ```bash
-   dotnet run
+   dotnet run --project MyFirstApi/MyFirstApi.csproj
    ```
 4. Open [http://localhost:5000/swagger](http://localhost:5000/swagger) for API documentation.
 
