@@ -21,7 +21,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<ApiContext>(options => 
     options.UseInMemoryDatabase("ProductDb"));
 
-// builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddDbContext<ApplicationDbContext>();
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<ProductRepository>();
@@ -51,13 +52,7 @@ builder.Services.AddSingleton<ProfilePrototypeRegistry>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApiContext>();
-
-    DbInitializer.Initialize(context);
-}
+// Note: Skipping database initialization since we're using AdventureWorks with existing data
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -71,4 +66,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

@@ -19,7 +19,7 @@ public class ShippingManifestBuilder : IManifestBuilder
     public IManifestBuilder BuildProductList(IEnumerable<Product> products)
     {
          _manifest.ProductList = "Products:\n" + 
-                                string.Join("\n", products.Select(p => $"- {p.Name} ({p.Price:C})"));
+                                string.Join("\n", products.Select(p => $"- {p.Name} ({p.ListPrice:C})"));
         return this;
     }
      public IManifestBuilder BuildCustomsInfo(Order order)

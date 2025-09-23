@@ -15,7 +15,7 @@ public class ProductServiceTests
         var mockRepository = new Mock<IProductRepository>();
         var expectedProducts = new List<Product>
         {
-            new Product { Id = 1, Name = "Test Product", Price = 10.99m }
+            new Product { ProductId = 1, Name = "Test Product", ListPrice = 10.99m }
         };
 
         mockRepository.Setup(repo => repo.GetAllAsync())

@@ -10,4 +10,9 @@ public class ProductService(IProductRepository repository)
     {
         return await _repository.GetAllAsync();
     }
+
+    public async Task<IEnumerable<Product>> GetProductsByColor(string color)
+    {
+        return await _repository.GetProductsByColor(color);
+    }
 }

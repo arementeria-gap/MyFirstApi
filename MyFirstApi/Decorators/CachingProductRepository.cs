@@ -9,7 +9,7 @@ public class CachingProductRepository : IProductRepository
     private readonly IProductRepository _decoratedRepository;
     private readonly IMemoryCache _cache;
     private const string ProductsCacheKey = "AllProducts";
-    
+
     public CachingProductRepository(IProductRepository decoratedRepository, IMemoryCache cache)
     {
         _decoratedRepository = decoratedRepository;
@@ -31,5 +31,10 @@ public class CachingProductRepository : IProductRepository
         _cache.Set(ProductsCacheKey, products, TimeSpan.FromMinutes(1));
 
         return products;
+    }
+
+    public async Task<IEnumerable<Product>> GetProductsByColor(string color)
+    {
+        return await _decoratedRepository.GetProductsByColor(color);
     }
 }
