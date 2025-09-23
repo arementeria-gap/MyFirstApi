@@ -2,6 +2,7 @@
 using MyFirstApi.Models;
 using MyFirstApi.Repository;
 using MyFirstApi.Services;
+using Shouldly;
 
 namespace MyFirstApi.Tests;
 
@@ -16,10 +17,10 @@ public class ProductServiceTests
         {
             new Product { Id = 1, Name = "Test Product", Price = 10.99m }
         };
-        
+
         mockRepository.Setup(repo => repo.GetAllAsync())
                      .ReturnsAsync(expectedProducts);
-        
+
         var productService = new ProductService(mockRepository.Object);
 
         // Act
@@ -28,5 +29,8 @@ public class ProductServiceTests
         // Assert
         Assert.Single(result);
         Assert.Equal("Test Product", result.First().Name);
+
+        result.ShouldHaveSingleItem();
+        result.First().Name.ShouldBe("Test Product");
     }
 }
